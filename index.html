@@ -48,7 +48,7 @@ const dim=m=>{let[y,x]=m.split('-').map(Number);return new Date(y,x,0).getDate()
 const dueDate=(m,d)=>m+'-'+pad(Math.min(d,dim(m)));
 const dd=(a,b)=>Math.round((new Date(a)-new Date(b))/864e5);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const SB_URL='PASTE_YOUR_SUPABASE_URL',SB_KEY='PASTE_YOUR_ANON_KEY';
+const SB_URL='giuqdjlscsritzbxvqmv.supabase.com',SB_KEY='sb_publishable_Cb-9RMj4yP9cPJDlltz1OA_ArCC1asU';
 const COLS={props:'props',ten:'ten',bills:'bills',pays:'pays',log:'logs'};
 let sb,ME={email:'',role:'viewer'},SNAP={},RO=true,SYNC='',dirty=0,q,chain=Promise.resolve(),rt;
 const fresh=()=>({props:[],ten:[],bills:[],pays:[],log:[],rem:{b:3,a:[3,7],lease:60},seq:0});S=fresh();
