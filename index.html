@@ -1,0 +1,252 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Rent Manager</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>
+:root{--bg:#F7F5EF;--fg:#245B4A;--teal:#4C9A8A;--ter:#D77A56;--amb:#E6B85C;--sage:#E6EFE7;--blue:#E7EFF8;--peach:#F9E8DF;--t:#24342F;--m:#748078;--sh:0 1px 2px #24342f0d,0 8px 22px #24342f12;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:14px/1.45 Inter,system-ui,sans-serif}
+h1{font-size:26px;margin:0 0 2px;letter-spacing:-.4px}h2{font-size:20px;margin:0 0 10px}
+.shell{display:flex;min-height:100vh}#nv{width:236px;flex:none;background:var(--fg);color:#dcebe3;position:sticky;top:0;height:100vh;padding:18px 12px;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
+.br{display:flex;gap:10px;align-items:center;padding:4px 8px 18px;color:#fff;font-size:16px}.br i{background:var(--amb);color:var(--fg);border-radius:10px;padding:7px;display:flex}
+#nv button{display:flex;gap:11px;align-items:center;text-align:left;background:none;border:0;border-radius:10px;color:#cfe3d9;padding:10px 12px;position:relative}
+#nv button:hover{background:#ffffff14}#nv button.on{background:var(--sage);color:var(--fg);font-weight:600}#nv button.on:before{content:"";position:absolute;left:-12px;top:9px;bottom:9px;width:4px;border-radius:0 4px 4px 0;background:var(--amb)}
+.mw{flex:1;min-width:0;max-width:1120px;margin:auto}#tb{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px 0;flex-wrap:wrap}main{padding:12px 20px 40px}
+#bn{display:none}
+button,input,select,textarea{font:inherit;color:var(--t);background:#fff;border:1px solid #dde5de;border-radius:10px;padding:8px 11px;transition:.15s}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--teal);outline-offset:1px}button{cursor:pointer}button:hover{transform:translateY(-1px);box-shadow:var(--sh)}
+button.p{background:var(--fg);color:#fff;border-color:var(--fg);font-weight:600}button.p.t{background:var(--ter);border-color:var(--ter);color:#fff}button.on{border-color:var(--teal)}button.d{color:#A8442A;border-color:#f0cfc2}
+.g{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:14px}.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
+.sc{border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:2px;transition:.15s}.sc b{font-size:24px;letter-spacing:-.5px}.k{cursor:pointer}.k:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.sc.blue{background:var(--blue)}.sc.sage{background:var(--sage)}.sc.amb{background:#FBF1D8}.sc.peach{background:var(--peach)}
+.ic{display:inline-flex;padding:8px;border-radius:11px;margin-bottom:6px;width:fit-content;vertical-align:middle;color:var(--fg)}.ic.blue{background:var(--blue);color:#2F5F94}.ic.sage{background:var(--sage)}.ic.peach{background:var(--peach);color:#A8442A}.ic.amb{background:#FBF1D8;color:#8A5A00}.sc .ic{background:#ffffffb0}
+.m{color:var(--m);font-size:12.5px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}.fm{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+label{display:block;font-size:12px;color:var(--m)}label input,label select,label textarea{width:100%;display:block;margin-top:3px}
+.hero{background:linear-gradient(135deg,#245B4A,#2f7563);color:#fff;border-radius:18px;padding:22px;margin:14px 0;box-shadow:var(--sh)}.hero span{opacity:.8}.hero h2{font-size:38px;margin:2px 0;letter-spacing:-1px}.hero p{margin:0 0 14px;opacity:.9}
+.pr{height:8px;border-radius:8px;background:#ffffff30}.pr div{height:100%;border-radius:8px;background:var(--amb)}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%}th{background:var(--sage);color:var(--fg);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px}th:first-child{border-radius:10px 0 0 10px}th:last-child{border-radius:0 10px 10px 0}
+td,th{padding:11px 10px;text-align:left;white-space:nowrap}td{border-bottom:1px solid #eef1ec}tr:hover td{background:#f7faf6}
+.tag{padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;background:var(--blue);color:#2F5F94;white-space:nowrap}.tag.Paid,.tag.Occupied{background:var(--sage);color:#1E6B45}.tag.Due{background:#FBF1D8;color:#7A5200}.tag.Partially{background:var(--peach);color:#A04A1A}.tag.Overdue{background:#FBE1DC;color:#B3261E}
+.ov{color:#B3261E}.li{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eef1ec}.li:last-child{border:0}
+.pc{display:flex;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:12px;box-shadow:var(--sh)}.pc .ic{margin:0}.pc>div{flex:1;min-width:0}
+.emp{display:flex;flex-direction:column;align-items:center;gap:4px;padding:28px;text-align:center}.bk{background:var(--sage);border-radius:12px;padding:10px;margin:8px 0}
+.demo{background:#FBF1D8;color:#7A5200;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600}
+#md{position:fixed;inset:0;background:#24342f66;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:16px;z-index:20}#md .card{max-width:760px;width:100%;margin:auto;box-shadow:0 20px 60px #0003}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--fg);color:#fff;padding:10px 18px;border-radius:12px;z-index:30;box-shadow:var(--sh)}
+.sk{height:90px;border-radius:16px;margin-bottom:12px;background:linear-gradient(90deg,#ece9df 25%,#f6f4ed 50%,#ece9df 75%);background-size:200% 100%;animation:sh 1.1s infinite}@keyframes sh{to{background-position:-200% 0}}
+@media(max-width:820px){#nv{display:none}#bn{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--fg);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));gap:2px;overflow-x:auto;z-index:15}
+#bn button{flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;background:none;border:0;color:#cfe3d9;padding:6px 10px;border-radius:10px}#bn button.on{background:var(--sage);color:var(--fg);font-weight:600}main{padding-bottom:100px}h1{font-size:22px}.hero h2{font-size:30px}}
+.out #nv,.out #tb,.out #bn{display:none}@media print{#nv,#bn,#tb,.np{display:none!important}#md{position:static;background:none;display:block}body{background:#fff}.card{box-shadow:none}}
+</style></head><body>
+<div class="shell"><aside id="nv"></aside><div class="mw"><div id="tb"></div><main id="app"></main></div></div><nav id="bn"></nav><div id="md"><div class="card" id="mc"></div></div>
+<script>
+const K='rentmgr.v1';let S,V={v:'dash',pid:null,f:{},mo:null};
+const $=id=>document.getElementById(id),uid=()=>Math.random().toString(36).slice(2,9);
+const inr=n=>(n<0?'-':'')+'₹'+Math.abs(Math.round((n||0)*100)/100).toLocaleString('en-IN');
+const pad=n=>String(n).padStart(2,'0'),ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const TODAY=ymd(new Date()),CM=TODAY.slice(0,7);
+const addM=(m,n)=>{let[y,x]=m.split('-').map(Number);x+=n-1;return(y+Math.floor(x/12))+'-'+pad(x%12+1)};
+const mlabel=m=>new Date(m+'-01').toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+const dim=m=>{let[y,x]=m.split('-').map(Number);return new Date(y,x,0).getDate()};
+const dueDate=(m,d)=>m+'-'+pad(Math.min(d,dim(m)));
+const dd=(a,b)=>Math.round((new Date(a)-new Date(b))/864e5);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SB_URL='PASTE_YOUR_SUPABASE_URL',SB_KEY='PASTE_YOUR_ANON_KEY';
+const COLS={props:'props',ten:'ten',bills:'bills',pays:'pays',log:'logs'};
+let sb,ME={email:'',role:'viewer'},SNAP={},RO=true,SYNC='',dirty=0,q,chain=Promise.resolve(),rt;
+const fresh=()=>({props:[],ten:[],bills:[],pays:[],log:[],rem:{b:3,a:[3,7],lease:60},seq:0});S=fresh();
+const setSync=t=>{SYNC=t;const e=$('sy');if(e)e.textContent=t};
+function setSnap(){SNAP={rem:JSON.stringify(S.rem)};for(const k in COLS)SNAP[k]=new Map(S[k].map(x=>[x.id,JSON.stringify(x)]))}
+async function fetchAll(t){let o=[],i=0;for(;;){const{data,error}=await sb.from(t).select('data').order('id').range(i,i+999);if(error)throw error;o=o.concat(data.map(r=>r.data));if(data.length<1000)return o;i+=1000}}
+async function loadAll(){const n=fresh();for(const k in COLS)n[k]=await fetchAll(COLS[k]);const st=await sb.from('settings').select('data').eq('id','main').maybeSingle();if(st.data&&st.data.data.rem)n.rem=st.data.data.rem;
+ S=n;S.seq=Math.max(0,...S.pays.map(p=>parseInt(String(p.rc).slice(3))||0));setSnap()}
+function save(){if(RO){toast('View-only account: changes are not saved.');return}dirty=1;setSync('Saving…');clearTimeout(q);q=setTimeout(()=>{chain=chain.then(push)},400)}
+async function push(){try{for(const k in COLS){const up=[],cur=new Map();S[k].forEach(x=>{if(!x.id)x.id=uid();const j=JSON.stringify(x);cur.set(x.id,j);if(SNAP[k].get(x.id)!==j)up.push({id:x.id,data:x,updated_by:ME.email})});
+ for(let i=0;i<up.length;i+=500){const{error}=await sb.from(COLS[k]).upsert(up.slice(i,i+500));if(error)throw error}
+ const del=[...SNAP[k].keys()].filter(i=>!cur.has(i));if(del.length){const{error}=await sb.from(COLS[k]).delete().in('id',del);if(error)throw error}SNAP[k]=cur}
+ const sj=JSON.stringify(S.rem);if(SNAP.rem!==sj){const{error}=await sb.from('settings').upsert({id:'main',data:{rem:S.rem},updated_by:ME.email});if(error)throw error;SNAP.rem=sj}
+ dirty=0;setSync('Synced ✓')}catch(e){setSync('Not saved ⚠');toast('Sync failed: '+(e.message||e))}}
+function subRT(){sb.channel('rm').on('postgres_changes',{event:'*',schema:'public'},()=>{clearTimeout(rt);rt=setTimeout(async()=>{if(dirty||$('md').style.display==='flex')return;try{await loadAll();render()}catch(e){}},900)}).subscribe()}
+function loginUI(){$('app').innerHTML=`<div class="card" style="max-width:380px;margin:60px auto"><h1>Rent Manager</h1><p class="m">Sign in with your email and password.</p><form onsubmit="login(event)"><label>Email<input name="email" type="email" required></label><label>Password<input name="pw" type="password" minlength="6" required></label><div class="row" style="margin-top:10px"><button class="p">Sign in</button><button type="button" onclick="signup(this.form)">Create account</button></div></form><p class="m">New family member? Create an account, then ask the owner to approve your email.</p></div>`}
+async function login(e){const f=fd(e);const{error}=await sb.auth.signInWithPassword({email:f.email,password:f.pw});if(error)return toast(error.message);boot()}
+async function signup(fm){const f=Object.fromEntries(new FormData(fm));if(!f.email||!f.pw)return toast('Enter email and password');const{error}=await sb.auth.signUp({email:f.email,password:f.pw});toast(error?error.message:'Account created. Confirm via the email sent, then sign in.')}
+const logout=async()=>{await sb.auth.signOut();location.reload()};
+async function boot(){if(SB_URL.startsWith('PASTE')){$('app').innerHTML='<div class="card"><h2>Setup needed</h2><p>Paste your Supabase URL and anon key at the top of the script in index.html.</p></div>';document.body.classList.add('out');return}
+ $('app').innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div>';sb=sb||supabase.createClient(SB_URL,SB_KEY);
+ const{data:{session}}=await sb.auth.getSession();if(!session){document.body.classList.add('out');return loginUI()}
+ document.body.classList.remove('out');ME.email=(session.user.email||'').toLowerCase();
+ const m=await sb.from('members').select('role').eq('email',ME.email).maybeSingle();
+ if(!m.data){document.body.classList.add('out');$('app').innerHTML=`<div class="card" style="max-width:420px;margin:60px auto"><h2>Access not granted yet</h2><p>${esc(ME.email)} is not on the approved list. Ask the owner to add it.</p><button onclick="logout()">Sign out</button></div>`;return}
+ ME.role=m.data.role;RO=ME.role==='viewer';
+ try{await loadAll()}catch(e){return toast('Load failed: '+(e.message||e))}render();subRT()}
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),3500)}
+// ---- core calculations ----
+const tenOf=p=>S.ten.filter(t=>t.pid===p).sort((a,b)=>b.start.localeCompare(a.start));
+const active=p=>tenOf(p).find(t=>t.active);
+const rentFor=(t,m)=>{let r=t.rent;(t.rev||[]).filter(x=>x.eff<=m).sort((a,b)=>a.eff.localeCompare(b.eff)).forEach(x=>r=x.rent);return r};
+function ensureBills(){let ch=0;S.ten.forEach(t=>{let end=t.active?addM(CM,1):(t.endM||CM);let m=t.start.slice(0,7);while(m<=end){
+ if(!S.bills.some(b=>b.tid===t.id&&b.m===m)){S.bills.push({id:t.id+'_'+m,pid:t.pid,tid:t.id,m,rent:rentFor(t,m),ch:[],cr:0,crN:''});ch=1}m=addM(m,1)}});if(ch&&!RO)save()}
+const live=()=>S.pays.filter(p=>!p.void);
+const paidOn=b=>live().reduce((s,p)=>s+p.al.filter(a=>a.bid===b.id).reduce((x,a)=>x+a.amt,0),0);
+function rows(tid){let prev=0;const t=S.ten.find(x=>x.id===tid);return S.bills.filter(b=>b.tid===tid).sort((a,b)=>a.m.localeCompare(b.m)).map(b=>{
+ const chg=b.ch.reduce((s,c)=>s+c.amt,0),own=b.rent+chg-b.cr,payable=own+prev,paid=paidOn(b),rem=payable-paid,due=dueDate(b.m,t.due);
+ let st,od=0;if(rem<=0.005&&payable>0||rem<=0.005&&paid>0)st='Paid';else if(b.m>CM)st=paid>0?'Partially Paid':'Not Due';
+ else if(due<TODAY){od=dd(TODAY,due);st=paid>0?'Partially Paid':'Overdue'}else st=paid>0?'Partially Paid':'Due';
+ const r={b,t,chg,own,prev,payable,paid,rem,due,st,od,ovd:od>0&&rem>0.005};prev=rem;return r})}
+const cur=pid=>{const t=active(pid);if(!t)return null;const r=rows(t.id).filter(x=>x.b.m<=CM);return r[r.length-1]||null};
+const stat=pid=>{const r=cur(pid);return r?(r.ovd&&r.st==='Partially Paid'?'Partially Paid':r.st):'Vacant'};
+const allRows=()=>S.ten.flatMap(t=>rows(t.id));
+function ageBucket(d){return d<=7?'1–7 days':d<=30?'8–30 days':d<=60?'31–60 days':'60+ days'}
+// ---- UI helpers ----
+const tag=s=>`<span class="tag ${s.split(' ')[0]}">${s}</span>`;
+function modal(h){$('mc').innerHTML=h;$('md').style.display='flex'}function closeM(){$('md').style.display='none'}
+const fld=(l,n,v='',ty='text',x='')=>`<label>${l}<input name="${n}" type="${ty}" value="${esc(v)}" ${x}></label>`;
+const sel=(l,n,o,v='')=>`<label>${l}<select name="${n}">${o.map(x=>`<option ${x==v?'selected':''}>${x}</option>`).join('')}</select></label>`;
+const fd=e=>{e.preventDefault();return Object.fromEntries(new FormData(e.target))};
+const go=(v,x={})=>{V={...V,v,...x};render()};
+const IC={dash:'<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',props:'<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2M10 6h4M10 10h4M10 14h4M10 18h4"/>',tenants:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',ledger:'<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',coll:'<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',exp:'<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M15 8h-5a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>',rem:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a2 2 0 0 0 3.4 0"/>',renew:'<path d="M3 12a9 9 0 0 1 9-9 9.8 9.8 0 0 1 6.7 2.7L21 8"/><path d="M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.8 9.8 0 0 1-6.7-2.7L3 16M8 16H3v5"/>',rep:'<path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/>',settings:'<circle cx="12" cy="12" r="3"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'};
+const ico=(k,z=18)=>`<svg width="${z}" height="${z}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
+const NAV=[['dash','Overview'],['props','Properties'],['tenants','Tenants'],['ledger','Rent Ledger'],['coll','Collections'],['exp','Expenses & Charges'],['rem','Reminders'],['renew','Renewals'],['rep','Reports'],['settings','Settings']];
+const empty=(t,x)=>`<div class="emp"><svg width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="34" fill="#E6EFE7"/><path d="M20 50V30l16-10 16 10v20z" fill="#fff" stroke="#245B4A" stroke-width="2"/><rect x="31" y="38" width="10" height="12" fill="#E6B85C"/></svg><b>${t}</b><span class="m">${x}</span></div>`;
+const ptint=p=>['sage','blue','peach','amb'][Math.max(0,TY.indexOf(p.type))%4];
+function render(){ensureBills();const nav=NAV.map(([k,l])=>`<button class="${V.v===k||(V.v==='detail'&&k==='props')?'on':''}" onclick="go('${k}',{f:{}})">${ico(k)}<span>${l}</span></button>`).join('');
+ $('nv').innerHTML=`<div class="br"><i>${ico('props',20)}</i><b>Rent Manager</b></div>${nav}`;$('bn').innerHTML=nav;
+ $('tb').innerHTML=`<span id="sy" class="m" style="margin-right:auto">${SYNC}</span>`+(RO?'<span class="demo">View only</span>':`<button class="p" onclick="propForm()">+ Add Property</button><button class="p t" onclick="payForm()">+ Record Payment</button>`);
+ ({dash,props,detail,tenants,rem,rep,ledger,collv,expv,renewv,settings})[V.v]()}
+// ---- dashboard ----
+function dash(){const ps=S.props.filter(p=>!p.arch),R=ps.map(p=>cur(p.id)).filter(Boolean);
+ const ex=R.reduce((s,r)=>s+r.own,0),paidMo=live().filter(p=>p.date.startsWith(CM)).reduce((s,p)=>s+p.amt,0);
+ const alloc=R.reduce((s,r)=>s+Math.min(r.paid,r.own),0),out=R.reduce((s,r)=>s+Math.max(r.rem,0),0),ov=R.filter(r=>r.ovd),ovAmt=ov.reduce((s,r)=>s+r.rem,0);
+ const vac=ps.filter(p=>!active(p.id)).length,part=R.filter(r=>r.st==='Partially Paid'),pct=ex?Math.min(100,Math.round(alloc/ex*100)):0;
+ const C=(l,v,f,tn,ic,sub='')=>`<div class="sc ${tn} k" onclick="go('props',{f:${esc(JSON.stringify(f))}})"><span class="ic">${ico(ic)}</span><span class="m">${l}</span><b>${v}</b><span class="m">${sub}</span></div>`;
+ const ag={};['1–7 days','8–30 days','31–60 days','60+ days'].forEach(k=>ag[k]=0);ov.forEach(r=>ag[ageBucket(r.od)]+=r.rem);
+ const mos=[...Array(6)].map((_,i)=>addM(CM,i-5)),ch=mos.map(m=>[m,allRows().filter(r=>r.b.m===m).reduce((s,r)=>s+r.own,0),live().filter(p=>p.date.startsWith(m)).reduce((s,p)=>s+p.amt,0)]),mx=Math.max(1,...ch.flat().filter(x=>typeof x==='number'));
+ const up=R.concat(S.props.map(p=>active(p.id)&&rows(active(p.id).id).find(x=>x.b.m===addM(CM,1))).filter(Boolean)).filter(r=>r.rem>0&&r.due>=TODAY).sort((a,b)=>a.due.localeCompare(b.due)).slice(0,6);
+ const rn=S.ten.filter(t=>t.active&&t.end&&dd(t.end,TODAY)>=0&&dd(t.end,TODAY)<=S.rem.lease);
+ const nm=id=>esc(S.props.find(p=>p.id===id).name),hr=new Date().getHours(),gr=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+ $('app').innerHTML=`<div class="row"><div style="flex:1"><h1>${gr} 👋</h1><div class="m">Here is how your rentals are doing in ${mlabel(CM)}.</div></div>${S.props.some(p=>p.demo)?'<span class="demo">Demo data</span><button class="d" onclick="rmDemo()">Remove demo</button>':''}${S.props.length?'':'<button class="p" onclick="demo()">Load demo data</button>'}</div>
+ <div class="hero"><span>Collected this month</span><h2>${inr(paidMo)}</h2><p>${pct}% of ${inr(ex)} expected · ${ps.length-vac} occupied, ${vac} vacant</p><div class="pr"><div style="width:${pct}%"></div></div></div>
+ <div class="g">${C('Expected rent',inr(ex),{},'blue','rep')}${C('Collected',inr(paidMo),{pay:1},'sage','coll')}${C('Outstanding',inr(out),{os:1},'amb','ledger',part.length+' partially paid')}${C('Overdue',inr(ovAmt),{st:'Overdue'},'peach','rem',ov.length+' properties')}</div>
+ <div class="card"><b>Monthly collection</b><div style="display:flex;gap:10px;align-items:flex-end;height:140px;margin-top:10px">${ch.map(([m,e,c])=>`<div style="flex:1;text-align:center"><div style="display:flex;gap:3px;align-items:flex-end;height:110px;justify-content:center"><i style="width:30%;border-radius:6px 6px 0 0;background:var(--sage);height:${e/mx*100}%" title="Expected ${inr(e)}"></i><i style="width:30%;border-radius:6px 6px 0 0;background:linear-gradient(#4C9A8A,#245B4A);height:${c/mx*100}%" title="Collected ${inr(c)}"></i></div><span class="m">${mlabel(m).slice(0,3)}</span></div>`).join('')}</div><span class="m">Pale = expected · Green = collected</span></div>
+ <div class="g" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"><div class="card"><b>Upcoming collections</b>${up.map(r=>`<div class="li"><div><b>${nm(r.b.pid)}</b><div class="m">${r.due}</div></div><div style="text-align:right">${inr(r.rem)}<br>${tag(r.st)}</div></div>`).join('')||empty('Nothing upcoming','No collections due soon.')}</div>
+ <div class="card"><b>Needs attention</b>${ov.map(r=>`<div class="li"><div><b>${nm(r.b.pid)}</b><div class="m">${esc(r.t.tenant)} · ${r.od} days late</div></div><b class="ov">${inr(r.rem)}</b></div>`).join('')}${rn.map(t=>`<div class="li"><div><b>${nm(t.pid)}</b><div class="m">Lease ends ${t.end}</div></div>${tag('Due')}</div>`).join('')}${ov.length+rn.length?'':empty('All clear','No overdue rent or expiring leases.')}
+ ${ov.length?`<div class="m" style="margin-top:8px">Ageing: ${Object.entries(ag).filter(x=>x[1]).map(([k,v])=>k+' '+inr(v)).join(' · ')}</div>`:''}</div></div>
+ <h2>Property overview</h2><div class="g" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">${ps.map(p=>{const t=active(p.id);return`<div class="pc k" onclick="go('detail',{pid:'${p.id}'})"><span class="ic ${ptint(p)}">${ico('props')}</span><div><b>${esc(p.name)}</b><div class="m">${esc(t?t.tenant:'Vacant')} · ${t?inr(rentFor(t,CM)):'—'}</div></div>${tag(stat(p.id))}</div>`}).join('')||empty('No properties yet','Add your first property to get started.')}</div>`}
+// ---- properties ----
+function props(){const f=V.f||{};let L=S.props.filter(p=>f.arch?p.arch:!p.arch).map(p=>({p,t:active(p.id),r:cur(p.id),s:stat(p.id)}));
+ if(f.occ)L=L.filter(x=>(x.t?'Occupied':'Vacant')===f.occ);if(f.st)L=L.filter(x=>x.s===f.st||(f.st==='Overdue'&&x.r?.ovd));if(f.ty)L=L.filter(x=>x.p.type===f.ty);if(f.os)L=L.filter(x=>x.r&&x.r.rem>0);
+ if(f.day)L=L.filter(x=>x.t&&x.t.due==f.day);if(f.q)L=L.filter(x=>(x.p.name+x.p.id+(x.t?.tenant||'')).toLowerCase().includes(f.q.toLowerCase()));
+ if(f.min)L=L.filter(x=>x.r&&x.r.rem>=+f.min);if(f.pay){L=L.filter(x=>live().some(p=>p.pid===x.p.id&&p.date.startsWith(CM)))}
+ const F=(k,v)=>`V.f['${k}']=${v};props()`;
+ $('app').innerHTML=`<div class="row"><h2 style="margin:0;flex:1">Properties (${L.length})</h2><button onclick="V.f={arch:!${!!f.arch}};props()">${f.arch?'Show active':'Show archived'}</button><button class="p" onclick="propForm()">+ Add property</button></div>
+ <div class="card row"><input placeholder="Search name / ID / tenant" value="${esc(f.q||'')}" onchange="${F('q','this.value')}">
+ <select onchange="${F('occ','this.value')}"><option value="">Occupancy</option><option>Occupied</option><option>Vacant</option></select>
+ <select onchange="${F('st','this.value')}"><option value="">Status</option><option>Paid</option><option>Partially Paid</option><option>Overdue</option><option>Due</option></select>
+ <select onchange="${F('ty','this.value')}"><option value="">Type</option>${TY.map(x=>`<option>${x}</option>`).join('')}</select>
+ <input type="number" min="1" max="31" style="width:90px" placeholder="Due day" onchange="${F('day','this.value')}"><input type="number" style="width:130px" placeholder="Min outstanding ₹" onchange="${F('min','this.value')}">
+ <button onclick="V.f={};props()">Clear</button></div>
+ <div class="card tw"><table><tr><th>Property</th><th>Type</th><th>Tenant</th><th>Rent</th><th>Due day</th><th>Outstanding</th><th>Status</th></tr>
+ ${L.map(x=>`<tr style="cursor:pointer" onclick="go('detail',{pid:'${x.p.id}'})"><td><span class="ic ${ptint(x.p)}" style="margin:0 6px 0 0">${ico('props',15)}</span>${esc(x.p.name)} <span class="m">${esc(x.p.id)}</span>${x.p.demo?' <span class="demo">demo</span>':''}</td><td>${x.p.type}</td><td>${esc(x.t?.tenant||'—')}</td><td>${x.t?inr(rentFor(x.t,CM)):'—'}</td><td>${x.t?.due||'—'}</td><td>${x.r?inr(Math.max(x.r.rem,0)):'—'}</td><td>${tag(x.s)}</td></tr>`).join('')||`<tr><td colspan=7>${empty('No properties found','Add a property or adjust your filters.')}</td></tr>`}</table></div>`;
+ if(f.q){}}
+const TY=['Residential','Commercial','Industrial','Shop','Office','Warehouse','Other'],MODES=['Cash','Bank transfer','UPI','Cheque','Other'];
+function propForm(id){const p=S.props.find(x=>x.id===id)||{};const t=id?active(id):null;modal(`<h3>${id?'Edit':'Add'} property</h3><form onsubmit="saveProp(event,'${id||''}')"><div class="fm">
+ ${fld('Property name *','name',p.name,'text','required')}${fld('Property ID','pid',p.id||'P-'+pad(S.props.length+1),'text',id?'readonly':'required')}${sel('Type','type',TY,p.type)}${fld('Owner name','owner',p.owner)}</div>
+ <label>Full address *<textarea name="addr" required>${esc(p.addr)}</textarea></label><label>Notes<textarea name="notes">${esc(p.notes)}</textarea></label>
+ ${id?'':`<h4>Tenancy (leave tenant blank for vacant)</h4><div class="fm">${fld('Tenant name','tenant')}${fld('Phone','phone','','tel')}${fld('Email','email','','email')}${fld('Monthly base rent ₹','rent','','number','min="0"')}${fld('Rent due day (1–31)','due','1','number','min="1" max="31"')}${fld('Lease start','start',TODAY.slice(0,8)+'01','date')}${fld('Lease end','end','','date')}${fld('Security deposit ₹','dep','0','number')}${sel('Payment method','method',MODES)}${fld('Renewal month (YYYY-MM)','rmonth','','month')}${fld('Expected increase at renewal','inc','','number','step="any"')}${sel('Increase type','itype',['%','₹ fixed'])}</div>`}
+ <div class="row" style="margin-top:10px"><button class="p">Save</button><button type="button" onclick="closeM()">Cancel</button></div></form>`)}
+function saveProp(e,id){const f=fd(e);if(!id&&S.props.some(p=>p.id===f.pid))return toast('Property ID already exists.');
+ if(id){Object.assign(S.props.find(p=>p.id===id),{name:f.name,type:f.type,owner:f.owner,addr:f.addr,notes:f.notes})}
+ else{S.props.push({id:f.pid,name:f.name,type:f.type,owner:f.owner,addr:f.addr,notes:f.notes});if(f.tenant){if(!(+f.rent>0)||!f.start)return toast('Enter rent and lease start.');if(f.end&&f.end<f.start)return toast('Lease end is before start.');
+  S.ten.push({id:uid(),pid:f.pid,tenant:f.tenant,phone:f.phone,email:f.email,rent:+f.rent,due:+f.due||1,start:f.start,end:f.end,dep:+f.dep||0,method:f.method,rmonth:f.rmonth,inc:+f.inc||0,itype:f.itype,active:1,rev:[]})}}
+ save();closeM();render()}
+function tenForm(pid,id){const o=S.ten.find(t=>t.id===id)||{};modal(`<h3>${id?'Edit tenancy':'New tenant (previous tenancy is closed, history kept)'}</h3><form onsubmit="saveTen(event,'${pid}','${id||''}')"><div class="fm">
+ ${fld('Tenant name *','tenant',o.tenant,'text','required')}${fld('Phone','phone',o.phone,'tel')}${fld('Email','email',o.email,'email')}${fld('Base rent ₹ *','rent',o.rent,'number','min="1" required')}${fld('Due day','due',o.due||1,'number','min="1" max="31"')}${fld('Lease start *','start',o.start||TODAY,'date','required')}${fld('Lease end','end',o.end,'date')}${fld('Deposit ₹','dep',o.dep||0,'number')}${sel('Payment method','method',MODES,o.method)}${fld('Renewal month','rmonth',o.rmonth,'month')}${fld('Expected increase','inc',o.inc,'number','step="any"')}${sel('Increase type','itype',['%','₹ fixed'],o.itype)}</div>
+ <div class="row" style="margin-top:10px"><button class="p">Save</button><button type="button" onclick="closeM()">Cancel</button></div></form>`)}
+function saveTen(e,pid,id){const f=fd(e);f.rent=+f.rent;f.due=+f.due||1;f.dep=+f.dep||0;f.inc=+f.inc||0;if(f.end&&f.end<f.start)return toast('Lease end is before start.');
+ if(id){const t=S.ten.find(x=>x.id===id);const keepRent=t.rent;Object.assign(t,f);if(keepRent!==f.rent&&!confirm('Changing base rent only affects bills not yet generated; existing bills keep their amounts. Continue?'))return}
+ else{const a=active(pid);if(a){a.active=0;a.endM=addM(f.start.slice(0,7),-1);if(a.endM<a.start.slice(0,7))a.endM=a.start.slice(0,7)}S.ten.push({id:uid(),pid,...f,active:1,rev:[]})}
+ save();closeM();render()}
+// ---- detail ----
+function detail(){const p=S.props.find(x=>x.id===V.pid),ts=tenOf(p.id),a=active(p.id);
+ $('app').innerHTML=`<div class="row"><button onclick="go('props')">← Back</button><h2 style="margin:0;flex:1">${esc(p.name)} <span class="m">${p.id} · ${p.type}</span></h2><button onclick="propForm('${p.id}')">Edit</button><button onclick="tenForm('${p.id}')">${a?'Change tenant':'Add tenant'}</button><button class="d" onclick="archive('${p.id}')">${p.arch?'Restore':'Archive'}</button></div>
+ <div class="card"><div class="m">${esc(p.addr)} · Owner: ${esc(p.owner||'—')}</div>${p.notes?`<div class="m">Notes: ${esc(p.notes)}</div>`:''}
+ ${a?`<p><b>${esc(a.tenant)}</b> · ${esc(a.phone||'')} ${esc(a.email||'')}<br>Rent ${inr(rentFor(a,CM))} due on day ${a.due} · Deposit ${inr(a.dep)} · ${a.method}<br>Lease ${a.start} → ${a.end||'open'} · Renewal ${a.rmonth||'—'} · Expected increase ${a.inc?a.inc+(a.itype==='%'?'%':' ₹'):'—'}</p><div class="row"><button onclick="tenForm('${p.id}','${a.id}')">Edit tenancy</button><button onclick="payForm('${p.id}')" class="p">Record payment</button><button onclick="chgForm('${p.id}')">+ Add charge</button><button onclick="renForm('${a.id}')">Renewal</button></div>`:'<p class="m">Vacant</p>'}</div>
+ ${ts.map(t=>`<div class="card"><b>${esc(t.tenant)}</b> <span class="m">${t.start} → ${t.active?'present':(t.endM||'')}${t.active?'':' (past tenancy)'}</span>
+ <div class="tw"><table><tr><th>Month</th><th>Rent</th><th>Charges</th><th>Credit</th><th>Prev</th><th>Payable</th><th>Paid</th><th>Balance</th><th>Status</th><th></th></tr>
+ ${rows(t.id).reverse().map(r=>`<tr><td>${mlabel(r.b.m)}</td><td>${inr(r.b.rent)}</td><td>${inr(r.chg)}</td><td>${inr(r.b.cr)}</td><td>${inr(r.prev)}</td><td>${inr(r.payable)}</td><td>${inr(r.paid)}</td><td><b>${inr(r.rem)}</b></td><td>${tag(r.ovd&&r.st==='Partially Paid'?'Partially Paid · Overdue':r.st)}</td><td><button onclick="chgForm('${p.id}','${r.b.id}')">Charges</button></td></tr>`).join('')}</table></div></div>`).join('')}
+ <div class="card"><b>Payment history</b><div class="tw"><table><tr><th>Receipt</th><th>Date</th><th>Amount</th><th>Mode</th><th>Applied to</th><th></th></tr>${S.pays.filter(x=>x.pid===p.id).sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`<tr class="${x.void?'m':''}"><td>${x.rc}</td><td>${x.date}</td><td>${x.void?'<s>'+inr(x.amt)+'</s>':inr(x.amt)}</td><td>${x.mode} ${esc(x.ref)}</td><td>${x.al.map(a=>mlabel(S.bills.find(b=>b.id===a.bid).m)+' '+inr(a.amt)).join(', ')}${x.void?' · VOIDED '+esc(x.vr||''):''}</td><td>${x.void?'':`<button onclick="receipt('${x.id}')">Receipt</button> <button class="d" onclick="voidPay('${x.id}')">Void</button>`}</td></tr>`).join('')||'<tr><td class="m">No payments</td></tr>'}</table></div></div>`}
+function archive(id){const p=S.props.find(x=>x.id===id);if(!confirm((p.arch?'Restore ':'Archive ')+p.name+'? Records are kept.'))return;p.arch=!p.arch;save();go('props')}
+// ---- charges ----
+function chgForm(pid,bid){const t=active(pid);const bs=S.bills.filter(b=>b.pid===pid).sort((a,b)=>b.m.localeCompare(a.m));bid=bid||(bs.find(b=>b.m===CM)||bs[0])?.id;
+ const b=S.bills.find(x=>x.id===bid);if(!b)return toast('No bill yet.');
+ modal(`<h3>Charges · ${mlabel(b.m)}</h3><table>${b.ch.map(c=>`<tr><td>${esc(c.desc)}</td><td>${c.date}</td><td>${inr(c.amt)}</td><td><button class="d" onclick="delChg('${b.id}','${c.id}')">Remove</button></td></tr>`).join('')||'<tr><td class="m">No charges</td></tr>'}</table>
+ <form onsubmit="addChg(event,'${pid}','${b.id}')"><div class="fm"><label>Bill month<select name="bid" onchange="chgForm('${pid}',this.value)">${bs.map(x=>`<option value="${x.id}" ${x.id===b.id?'selected':''}>${mlabel(x.m)}</option>`).join('')}</select></label>${sel('Type','kind',['Electricity','Maintenance','Water','Repair','Other'])}${fld('Description (for Other)','desc')}${fld('Amount ₹ *','amt','','number','min="1" step="any" required')}${fld('Date','date',TODAY,'date')}${fld('Notes','notes')}<label>Recurring<select name="rec"><option value="">This month only</option><option value="3">Next 3 months</option><option value="12">Next 12 months</option></select></label></div>
+ <div class="row" style="margin-top:8px"><button class="p">Add charge</button><button type="button" onclick="closeM()">Close</button></div></form>
+ <div class="row"><b>Discount / credit this month:</b><input id="cr" type="number" value="${b.cr}" style="width:110px"><input id="crn" placeholder="reason" value="${esc(b.crN)}"><button onclick="setCr('${b.id}')">Save</button></div><p class="m">Bill attachments are not supported in this version.</p>`)}
+function addChg(e,pid,bid){const f=fd(e);const b=S.bills.find(x=>x.id===f.bid||x.id===bid);const n=+f.rec||0;const desc=f.kind==='Other'?(f.desc||'Other'):f.kind+(f.desc?' – '+f.desc:'');
+ for(let i=0;i<=n;i++){const bb=i?S.bills.find(x=>x.tid===b.tid&&x.m===addM(b.m,i)):b;if(bb)bb.ch.push({id:uid(),desc,amt:+f.amt,date:f.date,notes:f.notes})}save();chgForm(pid,b.id);render()}
+const delChg=(bid,cid)=>{if(!confirm('Remove this charge?'))return;const b=S.bills.find(x=>x.id===bid);b.ch=b.ch.filter(c=>c.id!==cid);save();chgForm(b.pid,bid);render()};
+const setCr=bid=>{const b=S.bills.find(x=>x.id===bid);b.cr=+$('cr').value||0;b.crN=$('crn').value;save();closeM();render()};
+// ---- payments ----
+function payForm(pid){const ps=S.props.filter(p=>!p.arch&&active(p.id));if(!ps.length)return toast('Add a property with a tenant first.');pid=pid||V.pid||ps[0].id;if(!ps.find(p=>p.id===pid))pid=ps[0].id;
+ const t=active(pid),rs=rows(t.id).filter(r=>r.rem>0.005||r.b.m>=CM);const def=rs.find(r=>r.rem>0.005)||rs[0];
+ modal(`<h3>Record payment</h3><form onsubmit="savePay(event)"><div class="fm"><label>Property<select name="pid" onchange="payForm(this.value)">${ps.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${esc(p.name)} – ${esc(active(p.id).tenant)}</option>`).join('')}</select></label>
+ ${fld('Amount received ₹ *','amt','','number','min="1" step="any" required')}${fld('Date received','date',TODAY,'date','required')}<label>Apply from month<select name="m">${rows(t.id).map(r=>`<option value="${r.b.id}" ${r.b.id===def?.b.id?'selected':''}>${mlabel(r.b.m)} (bal ${inr(r.rem)})</option>`).join('')}</select></label>${sel('Mode','mode',MODES,t.method)}${fld('Txn ref / cheque no.','ref')}${fld('Notes','notes')}</div>
+ ${def?`<div class="bk">Base rent ${inr(def.b.rent)} · Charges ${inr(def.chg)} · Credits −${inr(def.b.cr)} · Previous ${inr(def.prev)} · <b>Balance ${inr(def.rem)}</b></div>`:''}<p class="m">Payment fills the chosen month first, then spills into later months (oldest first). Amount beyond all open bills is rejected — add/generate bills first for longer advances.</p>
+ <div class="row"><button class="p">Save payment</button><button type="button" onclick="closeM()">Cancel</button></div></form>`)}
+function savePay(e){const f=fd(e),amt=+f.amt,t=active(f.pid);if(!(amt>0))return toast('Enter a valid amount.');if(f.date>TODAY&&!confirm('Date is in the future. Continue?'))return;
+ const R=rows(t.id);let i=R.findIndex(r=>r.b.id===f.m),left=amt,al=[];
+ // balance per bill ignoring carry: own - paid; carry-forward handled by chain, so allocate to own unpaid portion
+ for(;i<R.length&&left>0.005;i++){const room=Math.max(R[i].own-R[i].paid,0)+(i===R.findIndex(r=>r.b.id===f.m)?Math.max(R[i].prev,0)*0:0);const x=Math.min(room,left);if(x>0){al.push({bid:R[i].b.id,amt:x});left-=x}}
+ if(left>0.005)return toast('Amount exceeds open bills by '+inr(left)+'. Reduce the amount or choose an earlier month.');
+ S.seq++;S.pays.push({id:uid(),pid:f.pid,tid:t.id,amt,date:f.date,mode:f.mode,ref:f.ref,notes:f.notes,rc:'RC-'+String(S.seq).padStart(4,'0'),al,void:0,ts:new Date().toISOString()});save();closeM();render();toast('Payment recorded ✓');receipt(S.pays[S.pays.length-1].id)}
+function voidPay(id){const r=prompt('Void this payment? The original stays in history. Reason:');if(r===null)return;const p=S.pays.find(x=>x.id===id);p.void=1;p.vr=r;p.vts=new Date().toISOString();S.log.push({t:p.vts,a:'void',id,r});save();render()}
+function receipt(id){const p=S.pays.find(x=>x.id===id),pr=S.props.find(x=>x.id===p.pid),t=S.ten.find(x=>x.id===p.tid);
+ modal(`<h3>Rent Receipt ${p.rc}</h3><p>Received with thanks from <b>${esc(t.tenant)}</b> the sum of <b>${inr(p.amt)}</b> on ${p.date} by ${p.mode} ${esc(p.ref)}<br>Property: ${esc(pr.name)}, ${esc(pr.addr)}<br>Towards: ${p.al.map(a=>mlabel(S.bills.find(b=>b.id===a.bid).m)+' ('+inr(a.amt)+')').join(', ')}<br>Owner: ${esc(pr.owner||'')}</p><div class="row np"><button class="p" onclick="window.print()">Print / Save as PDF</button><button onclick="closeM()">Close</button></div>`)}
+// ---- tenants ----
+function tenants(){const m={};S.ten.forEach(t=>{const k=(t.tenant+'|'+(t.phone||'')).toLowerCase();(m[k]=m[k]||[]).push(t)});
+ $('app').innerHTML=`<h2>Tenant directory</h2>`+(Object.values(m).map(L=>`<div class="card"><b>${esc(L[0].tenant)}</b> <span class="m">${esc(L[0].phone||'')} ${esc(L[0].email||'')}</span>${L.map(t=>{const p=S.props.find(x=>x.id===t.pid),r=rows(t.id).filter(x=>x.b.m<=CM).pop();return`<div style="margin-top:6px;cursor:pointer" onclick="go('detail',{pid:'${p.id}'})">${esc(p.name)} · ${t.active?'current':'past'} · ${t.start} → ${t.active?'present':t.endM} · Balance ${r?inr(r.rem):'—'}</div>`}).join('')}</div>`).join('')||empty('No tenants yet','Tenants appear once you add a property with a tenant.'))}
+// ---- renewals ----
+function renForm(tid){const t=S.ten.find(x=>x.id===tid),r=t.ren||{};modal(`<h3>Renewal · ${esc(t.tenant)}</h3><p class="m">Current rent ${inr(rentFor(t,CM))}. Accepting adds a revision effective only from the chosen month — past bills are never changed; future bills not yet generated use the new rent.</p><form onsubmit="saveRen(event,'${tid}')"><div class="fm">${fld('Proposed rent ₹','rent',r.rent,'number','min="1" required oninput="this.form.pct.value=((this.value/'+rentFor(t,CM)+'-1)*100).toFixed(2)"')}${fld('Increase %','pct',r.pct,'number','step="any" readonly')}${fld('Effective month','eff',r.eff,'month','required')}${sel('Status','status',['Proposed','Negotiating','Accepted','Rejected'],r.status)}</div><div class="row" style="margin-top:8px"><button class="p">Save</button><button type="button" onclick="closeM()">Cancel</button></div></form>`)}
+function saveRen(e,tid){const f=fd(e),t=S.ten.find(x=>x.id===tid);f.rent=+f.rent;t.ren=f;t.rev=(t.rev||[]).filter(x=>x.src!=='ren');
+ if(f.status==='Accepted'){t.rev.push({eff:f.eff,rent:f.rent,src:'ren'});// regenerate only unpaid, untouched future bills
+  S.bills.filter(b=>b.tid===tid&&b.m>=f.eff&&b.m>CM&&paidOn(b)===0).forEach(b=>b.rent=rentFor(t,b.m));
+  S.bills.filter(b=>b.tid===tid&&b.m===CM&&b.m>=f.eff&&paidOn(b)===0&&!b.ch.length&&confirm('Apply new rent to the current month too (unpaid)?')).forEach(b=>b.rent=rentFor(t,b.m))}
+ save();closeM();render()}
+// ---- reminders ----
+function remList(){const L=[];S.ten.filter(t=>t.active).forEach(t=>{const p=S.props.find(x=>x.id===t.pid);if(p.arch)return;rows(t.id).filter(r=>r.b.m<=addM(CM,1)&&r.rem>0.005).forEach(r=>{const d=dd(r.due,TODAY);let ty=null;
+ if(r.paid>0&&r.ovd)ty='Partial payment pending';else if(r.od>0&&(r.od>=S.rem.a[0]||true))ty='Rent overdue ('+r.od+'d)';else if(d===0)ty='Rent due today';else if(d>0&&d<=S.rem.b)ty='Rent due in '+d+' days';
+ if(ty)L.push({k:r.b.id+ty.replace(/\d/g,''),ty,t,p,r,pri:r.od>0?0:1})});
+ if(t.end){const d=dd(t.end,TODAY);if(d>=0&&d<=S.rem.lease)L.push({k:t.id+'lease',ty:'Lease expires in '+d+' days',t,p,pri:2})}
+ if(t.rmonth&&t.rmonth>=CM&&t.rmonth<=addM(CM,2))L.push({k:t.id+'ren',ty:'Rent renewal in '+mlabel(t.rmonth),t,p,pri:2})});return L.sort((a,b)=>a.pri-b.pri)}
+function wa(x){return x.r?`Hello ${x.t.tenant}, this is a friendly reminder that ${inr(x.r.rem)} is pending for ${x.p.name} for ${mlabel(x.r.b.m)}. Kindly arrange the payment. Thank you.`:`Hello ${x.t.tenant}, this is a reminder regarding ${x.p.name}: ${x.ty}. Please get in touch to discuss. Thank you.`}
+function rem(){const L=remList();window._L=L;$('app').innerHTML=`<h2>Reminders (${L.length})</h2><div class="card row"><label>Days before due<input id="rb" type="number" value="${S.rem.b}" style="width:80px"></label><label>Days after due (comma separated)<input id="ra" value="${S.rem.a}" style="width:120px"></label><label>Lease alert (days)<input id="rl" type="number" value="${S.rem.lease}" style="width:80px"></label><button onclick="S.rem={b:+$('rb').value||0,a:$('ra').value.split(',').map(Number).filter(Boolean),lease:+$('rl').value||60};save();rem()">Save timing</button></div>
+ <p class="m">In-app only. Email, WhatsApp and push sending are <b>not connected</b> — use “Copy WhatsApp message” and paste it into WhatsApp yourself.</p>
+ ${L.map((x,i)=>{const lg=S.log.find(l=>l.k===x.k&&l.d===TODAY);return`<div class="card"><b>${esc(x.p.name)}</b> · ${esc(x.t.tenant)} · <span class="${x.pri?'':'ov'}">${x.ty}</span>${x.r?' · '+inr(x.r.rem):''}<div class="row" style="margin-top:6px"><button onclick="copyWa(${i})">Copy WhatsApp message</button>${lg?`<span class="m">Copied today (${lg.ch}, not a delivery confirmation)</span>`:''}</div></div>`}).join('')||empty('All clear','No reminders due right now.')}`}
+function copyWa(i){const x=_L[i];const done=()=>{if(!S.log.some(l=>l.k===x.k&&l.d===TODAY))S.log.push({k:x.k,d:TODAY,ch:'WhatsApp text copied',st:'copied'});save();rem()};
+ (navigator.clipboard?navigator.clipboard.writeText(wa(x)):Promise.reject()).then(done,()=>{prompt('Copy this message:',wa(x));done()})}
+// ---- reports ----
+function rep(){const m=V.mo||CM;const R=allRows().filter(r=>r.b.m===m&&!S.props.find(p=>p.id===r.b.pid).arch);
+ const pm=live().filter(p=>p.date.startsWith(m)),byMode={};pm.forEach(p=>byMode[p.mode]=(byMode[p.mode]||0)+p.amt);
+ const exp=R.reduce((s,r)=>s+r.own,0),col=R.reduce((s,r)=>s+r.paid,0);
+ $('app').innerHTML=`<div class="row np"><h2 style="margin:0;flex:1">Monthly report · ${mlabel(m)}</h2><input type="month" value="${m}" onchange="V.mo=this.value;rep()"><button onclick="csv()">Export CSV (opens in Excel)</button><button onclick="window.print()">Print</button><button onclick="backup()">Backup JSON</button><button onclick="restore()">Restore</button></div>
+ <div class="g"><div class="card"><span class="m">Expected</span><b>${inr(exp)}</b></div><div class="card"><span class="m">Collected against this month</span><b>${inr(col)}</b></div><div class="card"><span class="m">Closing balance</span><b>${inr(R.reduce((s,r)=>s+r.rem,0))}</b></div><div class="card"><span class="m">Received in month, by mode</span>${Object.entries(byMode).map(([k,v])=>`<div>${k}: ${inr(v)}</div>`).join('')||'—'}</div></div>
+ <div class="card tw"><table><tr><th>Property</th><th>Tenant</th><th>Rent</th><th>Charges</th><th>Prev bal</th><th>Payable</th><th>Collected</th><th>Balance</th><th>Status</th></tr>${R.map(r=>`<tr><td>${esc(S.props.find(p=>p.id===r.b.pid).name)}</td><td>${esc(r.t.tenant)}</td><td>${inr(r.b.rent)}</td><td>${inr(r.chg-r.b.cr)}</td><td>${inr(r.prev)}</td><td>${inr(r.payable)}</td><td>${inr(r.paid)}</td><td>${inr(r.rem)}</td><td>${r.st}</td></tr>`).join('')||'<tr><td class="m">No bills for this month.</td></tr>'}</table></div>`}
+async function dl(name,data){try{if(window.claude){const d=await claude.use('downloads');if(d)return await d.save({filename:name,data})}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data]));a.download=name;a.click()}catch(e){toast('Download failed')}}
+function csv(){const m=V.mo||CM;const R=allRows().filter(r=>r.b.m===m);const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';
+ dl(`rent-${m}.csv`,'\ufeff'+[['Property','Tenant','Month','Rent','Charges','Credit','Previous','Payable','Collected','Balance','Status']].concat(R.map(r=>[S.props.find(p=>p.id===r.b.pid).name,r.t.tenant,m,r.b.rent,r.chg,r.b.cr,r.prev,r.payable,r.paid,r.rem,r.st])).map(r=>r.map(q).join(',')).join('\n'))}
+const backup=()=>dl('rent-backup.json',JSON.stringify(S,null,1));
+function restore(){const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=async()=>{try{S=Object.assign(fresh(),JSON.parse(await i.files[0].text()));save();render()}catch(e){toast('Invalid backup file')}};i.click()}
+// ---- extra views ----
+const rowT=(h,B)=>`<div class="card tw"><table><tr>${h.map(x=>'<th>'+x+'</th>').join('')}</tr>${B}</table></div>`;
+function ledger(){const m=V.mo||CM,R=allRows().filter(r=>r.b.m===m);$('app').innerHTML=`<div class="row"><h1 style="flex:1">Rent Ledger</h1><input type="month" value="${m}" onchange="V.mo=this.value;ledger()"></div>`+(R.length?rowT(['Property','Tenant','Rent','Charges','Credit','Previous','Payable','Paid','Balance','Status'],R.map(r=>`<tr style="cursor:pointer" onclick="go('detail',{pid:'${r.b.pid}'})"><td>${esc(S.props.find(p=>p.id===r.b.pid).name)}</td><td>${esc(r.t.tenant)}</td><td>${inr(r.b.rent)}</td><td>${inr(r.chg)}</td><td>${inr(r.b.cr)}</td><td>${inr(r.prev)}</td><td>${inr(r.payable)}</td><td>${inr(r.paid)}</td><td><b>${inr(r.rem)}</b></td><td>${tag(r.st)}</td></tr>`).join('')):`<div class="card">${empty('No bills this month','Bills are created automatically for active tenancies.')}</div>`)}
+function collv(){const L=S.pays.slice().sort((a,b)=>b.date.localeCompare(a.date));$('app').innerHTML=`<div class="row"><h1 style="flex:1">Collections</h1><button class="p t" onclick="payForm()">+ Record Payment</button></div>`+(L.length?rowT(['Receipt','Date','Property','Tenant','Amount','Mode',''],L.map(x=>`<tr class="${x.void?'m':''}"><td>${x.rc}</td><td>${x.date}</td><td>${esc(S.props.find(p=>p.id===x.pid)?.name)}</td><td>${esc(S.ten.find(t=>t.id===x.tid)?.tenant)}</td><td>${x.void?'<s>'+inr(x.amt)+'</s> void':inr(x.amt)}</td><td>${x.mode}</td><td>${x.void?'':`<button onclick="receipt('${x.id}')">Receipt</button> <button class="d" onclick="voidPay('${x.id}')">Void</button>`}</td></tr>`).join('')):`<div class="card">${empty('No payments yet','Recorded payments will appear here.')}</div>`)}
+function expv(){const L=S.bills.flatMap(b=>b.ch.map(c=>({b,c}))).sort((a,b)=>b.c.date.localeCompare(a.c.date));$('app').innerHTML=`<div class="row"><h1 style="flex:1">Expenses & Charges</h1><select onchange="if(this.value)chgForm(this.value)"><option value="">+ Add charge to…</option>${S.props.filter(p=>active(p.id)).map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div>`+(L.length?rowT(['Date','Month','Property','Description','Amount'],L.map(({b,c})=>`<tr style="cursor:pointer" onclick="chgForm('${b.pid}','${b.id}')"><td>${c.date}</td><td>${mlabel(b.m)}</td><td>${esc(S.props.find(p=>p.id===b.pid).name)}</td><td>${esc(c.desc)}</td><td>${inr(c.amt)}</td></tr>`).join('')):`<div class="card">${empty('No charges yet','Electricity, maintenance, water and repairs show up here.')}</div>`)}
+function renewv(){const L=S.ten.filter(t=>t.active);$('app').innerHTML=`<h1>Renewals</h1>`+(L.length?rowT(['Property','Tenant','Lease end','Renewal month','Current rent','Proposal','Status',''],L.map(t=>`<tr><td>${esc(S.props.find(p=>p.id===t.pid).name)}</td><td>${esc(t.tenant)}</td><td>${t.end||'open'}</td><td>${t.rmonth||'—'}</td><td>${inr(rentFor(t,CM))}</td><td>${t.ren?inr(t.ren.rent)+' ('+t.ren.pct+'%)':'—'}</td><td>${tag(t.ren?t.ren.status:'Not started')}</td><td><button onclick="renForm('${t.id}')">Manage</button></td></tr>`).join('')):`<div class="card">${empty('No active leases','Renewals appear for occupied properties.')}</div>`)}
+function settings(){$('app').innerHTML=`<h1>Settings</h1><div class="card"><b>Account</b><p class="m">${esc(ME.email)} · ${ME.role}</p><div class="row"><button onclick="logout()">Sign out</button></div></div><div class="card"><b>Data</b><p class="m">Stored in your Supabase database and shared with approved family members. Keep a backup anyway.</p><div class="row"><button onclick="backup()">Backup JSON</button><button onclick="restore()">Restore</button>${S.props.some(p=>p.demo)?'<button class="d" onclick="rmDemo()">Remove demo data</button>':'<button onclick="demo()">Load demo data</button>'}</div></div><div class="card"><b>Reminder timing</b><p class="m">Configured on the Reminders page.</p><button onclick="go('rem')">Open reminders</button></div>`}
+// ---- demo ----
+function demo(){const a=addM(CM,-3)+'-01';const mk=(id,n,ty,ten,ph,rent,due,dep)=>{S.props.push({id,name:n,type:ty,owner:'Demo Owner',addr:'Demo address, Panipat, Haryana',notes:'',demo:1});if(ten)S.ten.push({id:'d'+id,pid:id,tenant:ten,phone:ph,email:'',rent,due,start:a,end:addM(CM,5)+'-28',dep,method:'UPI',rmonth:addM(CM,5),inc:10,itype:'%',active:1,rev:[],demo:1})};
+ mk('D-01','Demo Shop 1','Shop','Demo Tenant A','9800000001',25000,5,75000);mk('D-02','Demo Flat 2B','Residential','Demo Tenant B','9800000002',18000,10,36000);mk('D-03','Demo Warehouse','Warehouse','Demo Tenant C','9800000003',60000,1,180000);mk('D-04','Demo Office','Office','',0,0,0,0);
+ ensureBills();S.bills.filter(b=>b.tid==='dD-01'&&b.m===CM).forEach(b=>b.ch.push({id:uid(),desc:'Electricity',amt:2000,date:TODAY,notes:''}));
+ const pay=(t,m,amt)=>{const b=S.bills.find(x=>x.tid===t&&x.m===m);S.seq++;S.pays.push({id:uid(),pid:b.pid,tid:t,amt,date:m+'-06',mode:'UPI',ref:'DEMO',notes:'',rc:'RC-'+String(S.seq).padStart(4,'0'),al:[{bid:b.id,amt}],void:0,demo:1})};
+ [-3,-2,-1].forEach(i=>{pay('dD-01',addM(CM,i),25000);pay('dD-03',addM(CM,i),60000)});pay('dD-02',addM(CM,-3),18000);pay('dD-02',addM(CM,-2),10000);save();render()}
+function rmDemo(){if(!confirm('Remove all demo properties, tenants, bills and payments? Your own data stays.'))return;const ids=S.props.filter(p=>p.demo).map(p=>p.id);S.props=S.props.filter(p=>!p.demo);S.ten=S.ten.filter(t=>!ids.includes(t.pid));S.bills=S.bills.filter(b=>!ids.includes(b.pid));S.pays=S.pays.filter(p=>!ids.includes(p.pid));save();render()}
+boot();
+</script></body></html>
